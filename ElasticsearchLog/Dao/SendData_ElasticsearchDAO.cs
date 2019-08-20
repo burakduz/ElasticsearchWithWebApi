@@ -14,11 +14,16 @@ namespace ElasticsearchLog.Dao
 
         public string insertToElasticsearch(LogVariableDTO data, string indexName)
         {
-            LogVariable log = ElasticsearchTranslate.TranslateToLogVariable(data);
+
+            //var createIndexResponse = elasticClient.Indices.Create(indexName, c => c
+            //     .Map<LogVariable>(m => m.AutoMap())
+            //    );
+
+            LogVariable log = new LogVariable();
+             log = ElasticsearchTranslate.TranslateToLogVariable(data);
             var response = elasticClient.Index(log, i => i
             .Index(indexName));
-            Console.WriteLine(response.DebugInformation);
-            return response.ToString();
+            return response.DebugInformation.ToString();
         }
     }
 }

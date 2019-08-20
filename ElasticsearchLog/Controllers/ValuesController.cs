@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ElasticsearchLog.Dao;
+using ElasticsearchLog.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ElasticsearchLog.Controllers
@@ -11,35 +13,32 @@ namespace ElasticsearchLog.Controllers
     public class ValuesController : ControllerBase
     {
         // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        [HttpGet()]
+        public ActionResult<IEnumerable<LogVariableDTO>> Get()
         {
-            return new string[] { "value1", "value3" };
+            GetData_ElasticsearchDAO getData = new GetData_ElasticsearchDAO("http://192.168.0.107:9200/");
+            List<LogVariableDTO> list= getData.GetLastDatasWithFromAndSize(0, 10, "logforexample");
+            return list;
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("{forQuery}")]
+        public ActionResult<IEnumerable<LogVariableDTO>> Get( [FromBody]LogVariableDTO forQuery)
         {
-            return "value";
+            GetData_ElasticsearchDAO getData = new GetData_ElasticsearchDAO("http://192.168.0.107:9200/");
+            List<LogVariableDTO> list = getData.getDataWithQuery(forQuery, 0, 10, "logforexample");
+            return list;
         }
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public string Post([FromBody] LogVariableDTO value)
         {
+            SendData_ElasticsearchDAO sendData = new SendData_ElasticsearchDAO("http://192.168.0.107:9200/");
+
+            return sendData.insertToElasticsearch(value, "logforexample");
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
 
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

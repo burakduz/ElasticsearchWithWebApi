@@ -40,7 +40,7 @@ namespace ElasticsearchLog.Dao
             return logs;
         }
 
-        public List<LogVariableDTO> GetLastDatasWithFromAndSize(int from, int size, string indexName)
+        public List<LogVariableDTO> GetLastDatasWithFromAndSize(int from, int size, string indexName)//Tarihe göre sıralandırılacak
         {
             List<LogVariableDTO> listLogVariable = new List<LogVariableDTO>();
 
