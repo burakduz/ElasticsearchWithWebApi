@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ElasticsearchLog.Dao;
+using ElasticsearchLog.Dao.Interfaces;
 using ElasticsearchLog.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,20 +14,20 @@ namespace ElasticsearchLog.Controllers
     public class ValuesController : ControllerBase
     {
         // GET api/values
-        [HttpGet()]
-        public ActionResult<IEnumerable<LogVariableDTO>> Get()
+        [HttpGet("{from}/{size}")]     
+        public ActionResult<IEnumerable<LogVariableDTO>> Get(int from , int size)
         {
-            GetData_ElasticsearchDAO getData = new GetData_ElasticsearchDAO("http://192.168.0.107:9200/");
-            List<LogVariableDTO> list= getData.GetLastDatasWithFromAndSize(0, 10, "logforexample");
+           getElasticsearchDataWithSizeInterface  getData = new GetData_ElasticsearchDAO("http://192.168.0.107:9200/");
+            List<LogVariableDTO> list= getData.GetLastDatasWithFromAndSize(from, size, "logforexample");
             return list;
         }
 
         // GET api/values/5
-        [HttpGet("{forQuery}")]
-        public ActionResult<IEnumerable<LogVariableDTO>> Get( [FromBody]LogVariableDTO forQuery)
+        [HttpGet("{from}/{size}/{forQuery}")]
+        public ActionResult<IEnumerable<LogVariableDTO>> Get(int from,int size, [FromBody]LogVariableDTO forQuery)
         {
-            GetData_ElasticsearchDAO getData = new GetData_ElasticsearchDAO("http://192.168.0.107:9200/");
-            List<LogVariableDTO> list = getData.getDataWithQuery(forQuery, 0, 10, "logforexample");
+            getElasticsearchDataWithQueryAndSizeInterface getData = new GetData_ElasticsearchDAO("http://192.168.0.107:9200/");
+            List<LogVariableDTO> list = getData.getDataWithQuery(forQuery, from, size, "logforexample");
             return list;
         }
 
